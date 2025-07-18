@@ -25,10 +25,10 @@ public class ExchangeRateService : IExchangeRateService
         {
             throw new Exception($"Conversion rate for {from} or {to} not found.");
         }
-            if (_savedRates.Count == 0)
-            {
+        if (_savedRates.Count == 0)
+        {
                 await GetRateAsync(); // Fetch rates if cache is empty or expired
-            }
+        }
 
 
        
@@ -97,9 +97,3 @@ public class ExchangeRateService : IExchangeRateService
 
 
 
-// reason for the above code is to handle conversion between different currencies, including EUR as a base currency.
-// The method checks if the conversion is direct to or from EUR, or if both currencies are
-// different from EUR, and processes the conversion accordingly.
-// The class also implements a caching mechanism to store exchange rates for a specified duration,
-// reducing the need for frequent API calls and improving performance.
-// The UpdateRatesAsync method is designed to be called periodically to refresh the exchange rates,
