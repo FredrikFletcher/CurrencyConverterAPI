@@ -17,6 +17,7 @@
 /Users/fredrikfletcher/CurrencyConverterApi/obj/Debug/net8.0/CurrencyConverterApi.csproj.CoreCompileInputs.cache
 /Users/fredrikfletcher/CurrencyConverterApi/obj/Debug/net8.0/CurrencyConverterApi.MvcApplicationPartsAssemblyInfo.cs
 /Users/fredrikfletcher/CurrencyConverterApi/obj/Debug/net8.0/CurrencyConverterApi.MvcApplicationPartsAssemblyInfo.cache
+/Users/fredrikfletcher/CurrencyConverterApi/obj/Debug/net8.0/CurrencyConverterApi.sourcelink.json
 /Users/fredrikfletcher/CurrencyConverterApi/obj/Debug/net8.0/staticwebassets.build.json
 /Users/fredrikfletcher/CurrencyConverterApi/obj/Debug/net8.0/staticwebassets.development.json
 /Users/fredrikfletcher/CurrencyConverterApi/obj/Debug/net8.0/staticwebassets/msbuild.CurrencyConverterApi.Microsoft.AspNetCore.StaticWebAssets.props

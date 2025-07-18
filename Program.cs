@@ -1,44 +1,43 @@
+
+using CurrencyConverterApi;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using CurrencyConverterApi.Services; 
+using CurrencyConverterApi.Services.Contracts;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(); // Register controllers for dependency injection
+builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>(); // Register HttpClient for IExchangeRateService
+builder.Services.AddSingleton<UpdateRatesService>(); // Register UpdateRatesService as a singleton to ensure it runs once per application lifetime
+builder.Services.AddEndpointsApiExplorer(); // Enables endpoint discovery for API controllers
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Currency Converter API",
+        Version = "v1"
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.Services.GetRequiredService<UpdateRatesService>();
+// Middleware
+if (app.Environment.IsDevelopment()) // Only enable Swagger in development
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(); // Enable Swagger UI
+    app.UseSwaggerUI(); // Use Swagger UI to visualize and test the API
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
+using (var scope = app.Services.CreateScope())
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var exchangeRateService = scope.ServiceProvider.GetRequiredService<IExchangeRateService>();
+}
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+//app.UseHttpsRedirection(); // standard but not in use for local development
+
+app.MapControllers(); 
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
