@@ -29,14 +29,25 @@ public class ExchangeRateService : IExchangeRateService
         {
                 await GetRateAsync(); // Fetch rates if cache is empty or expired
         }
-
-
-       
         
-        if (string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) || amount <= 0) //check for valid input parameters
+        
+        if (int.TryParse(from, out _) || int.TryParse(to, out _)) // Check if the currency codes are numeric, which is invalid
         {
-            throw new ArgumentException("Invalid input parameters.");
+            throw new ArgumentException("invalid input parameters");
         }
+        
+        if (from.Length !=3 || to.Length != 3) // Check if the currency codes are valid (3 characters
+        {
+            throw new ArgumentException("Currency codes must be 3 characters long.");
+        }
+
+
+
+
+            if (string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) || amount <= 0) //check for valid input parameters
+            {
+                throw new ArgumentException("Invalid input parameters.");
+            }
 
         if (from == to) // If the source and target currencies are the same, return the amount as is
         {
@@ -61,11 +72,10 @@ public class ExchangeRateService : IExchangeRateService
 
     }
 
-    public async Task GetRateAsync()
+    public async Task GetRateAsync() 
     {
         try
         {
-            Console.WriteLine($"[API] Fetching exchange rates at {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}");
 
             var response = await _httpClient.GetAsync($"https://api.frankfurter.app/latest?base=EUR"); // Fetch rates from the API
             response.EnsureSuccessStatusCode(); // Ensure the request was successful
